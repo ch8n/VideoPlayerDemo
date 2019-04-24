@@ -78,7 +78,7 @@ class ExplorerFragment : Fragment() {
             return
         }
 
-        var newPath = path.trim('/')
+        var newPath = path.trimEnd('/')
         if (newPath.isEmpty()) {
             newPath = FileUtils.internalStorage
         }
