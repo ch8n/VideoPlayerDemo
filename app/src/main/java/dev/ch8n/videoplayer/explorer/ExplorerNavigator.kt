@@ -1,15 +1,16 @@
 package dev.ch8n.videoplayer.explorer
 
 import dev.ch8n.videoplayer.explorer.fragment.ExplorerFragment
+import dev.ch8n.videoplayer.explorer.model.VideoDir
 import kotlinx.android.synthetic.main.activity_explorer.*
 
 class ExplorerNavigator(
     private val activity: ExplorerActivity
 ) {
 
-    fun explorerNavigateTo(path: String) {
+    fun explorerNavigateTo(items: ArrayList<VideoDir>) {
         (activity.fragment_holder as ExplorerFragment)
-            .openPath(path)
+            .openPath(items)
     }
 
     fun onBackPressed() {

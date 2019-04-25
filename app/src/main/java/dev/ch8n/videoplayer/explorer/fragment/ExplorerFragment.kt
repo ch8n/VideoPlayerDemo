@@ -1,6 +1,7 @@
 package dev.ch8n.videoplayer.explorer.fragment
 
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -10,9 +11,11 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import dev.ch8n.videoplayer.MainActivity
 import dev.ch8n.videoplayer.R
 import dev.ch8n.videoplayer.explorer.fragment.adapter.ExploreItemActionListener
 import dev.ch8n.videoplayer.explorer.fragment.adapter.ExploreItemAdapter
+import dev.ch8n.videoplayer.explorer.model.VideoDir
 import dev.ch8n.videoplayer.utils.FileUtils
 import kotlinx.android.synthetic.main.fragment_explorer.*
 
@@ -31,7 +34,7 @@ class ExplorerFragment : Fragment() {
         attachedContext = requireContext()
     }
 
-    private var currentPath: String = FileUtils.internalStorage
+    private var currentPath: ArrayList<VideoDir> = arrayListOf()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,10 +54,18 @@ class ExplorerFragment : Fragment() {
                 object : ExploreItemActionListener {
                     override fun onClickPosition(position: Int) {
                         val item = exploreItemAdapter.getExploreItemAt(position)
-                        if (item.isDirectory) {
-                            openPath(item.path)
-                        }
                         Toast.makeText(attachedContext, item.toString(), Toast.LENGTH_LONG).show()
+
+                        if (item.isDirectory) {
+                            val videoItems = FileUtils.getVideoFiles(item)
+                            exploreItemAdapter.submitList(videoItems)
+                        } else {
+                            startActivity(Intent(
+                                attachedContext, MainActivity::class.java
+                            ).also {
+                                it.putExtra("video_path", item.path)
+                            })
+                        }
                     }
                 }
             ).also {
@@ -73,35 +84,18 @@ class ExplorerFragment : Fragment() {
     }
 
 
-    fun openPath(path: String) {
+    fun openPath(displayItems: ArrayList<VideoDir>) {
         if (!isAdded) {
             return
         }
-
-        var newPath = path.trimEnd('/')
-        if (newPath.isEmpty()) {
-            newPath = FileUtils.internalStorage
-        }
-
-        currentPath = newPath
-        val dirList = FileUtils.getFiles(newPath)
-        Log.e("EXPLORE_FRAG", path)
-        Log.e("EXPLORE_FRAG", dirList.size.toString())
-        Log.e("EXPLORE_FRAG", dirList.toString())
-        exploreItemAdapter.submitList(dirList)
+        val newDisplayItems = FileUtils.removeDuplicates(displayItems)
+        currentPath = newDisplayItems
+        Log.e("EXPLORE_FRAG", newDisplayItems.toString())
+        exploreItemAdapter.submitList(newDisplayItems)
     }
 
     fun navigateUp(): Boolean {
 
-        if (currentPath == FileUtils.internalStorage) {
-            return false
-        }
-
-        val previousPath = currentPath.split(Regex("((?:/[^/\\r\\n]*))\$")).get(0)
-        Log.e("EXPLORE_FRAG", previousPath)
-        currentPath = previousPath
-        val dirList = FileUtils.getFiles(previousPath)
-        exploreItemAdapter.submitList(dirList)
         return true
     }
 

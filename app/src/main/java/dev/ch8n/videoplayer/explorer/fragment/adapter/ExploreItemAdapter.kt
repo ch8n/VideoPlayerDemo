@@ -7,29 +7,25 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import dev.ch8n.videoplayer.R
-import dev.ch8n.videoplayer.explorer.model.ExploreItem
+import dev.ch8n.videoplayer.explorer.model.VideoDir
 import kotlinx.android.synthetic.main.item_explorer.view.*
 
 class ExploreItemAdapter private constructor(
-    diffCallback: DiffUtil.ItemCallback<ExploreItem>,
+    diffCallback: DiffUtil.ItemCallback<VideoDir>,
     private val listener: ExploreItemActionListener
 ) :
-    ListAdapter<ExploreItem, ExploreItemAdapter.ExploreItemViewHolder>(diffCallback) {
-
+    ListAdapter<VideoDir, ExploreItemAdapter.ExploreItemViewHolder>(diffCallback) {
 
     companion object {
         override fun equals(other: Any?): Boolean {
             return super.equals(other)
         }
 
-        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<ExploreItem>() {
-            override fun areItemsTheSame(oldItem: ExploreItem, newItem: ExploreItem): Boolean = oldItem == newItem
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<VideoDir>() {
+            override fun areItemsTheSame(oldItem: VideoDir, newItem: VideoDir): Boolean = oldItem == newItem
 
-            override fun areContentsTheSame(oldItem: ExploreItem, newItem: ExploreItem): Boolean {
-                return (oldItem.name == newItem.name &&
-                        oldItem.path == newItem.path &&
-                        oldItem.isDirectory == newItem.isDirectory &&
-                        oldItem.childrens == newItem.childrens)
+            override fun areContentsTheSame(oldItem: VideoDir, newItem: VideoDir): Boolean {
+                return (oldItem.path == newItem.path)
             }
         }
 
@@ -46,10 +42,9 @@ class ExploreItemAdapter private constructor(
     override fun onBindViewHolder(holder: ExploreItemViewHolder, position: Int) {
         with(holder) {
             val exploreItem = getItem(position)
-            text_name.text = exploreItem.name
             text_path.text = exploreItem.path
+            text_name.text = exploreItem.name
             text_type.text = if (exploreItem.isDirectory) "DIR" else "FILE"
-            text_children.text = exploreItem.childrens.toString()
             container_explored_item.setOnClickListener {
                 listener.onClickPosition(position)
             }
@@ -60,10 +55,9 @@ class ExploreItemAdapter private constructor(
     class ExploreItemViewHolder(
         view: View
     ) : RecyclerView.ViewHolder(view) {
-        val text_name = view.text_name
         val text_path = view.text_path
+        val text_name = view.text_name
         val text_type = view.text_type
-        val text_children = view.text_children
         val container_explored_item = view.container_explored_item
     }
 }

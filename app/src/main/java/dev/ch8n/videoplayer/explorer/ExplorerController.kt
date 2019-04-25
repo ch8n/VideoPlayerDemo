@@ -8,7 +8,7 @@ class ExplorerController(private val view: ExplorerContract.View) : ExplorerCont
     override fun event(event: ExplorerAgent) = when (event) {
         ExplorerAgent.OnStart -> onStart()
         ExplorerAgent.OnStop -> TODO()
-        ExplorerAgent.InitFileManager -> initFileManager()
+        is ExplorerAgent.InitFileManager -> initFileManager(event.videoPathList)
     }
 
     private fun onStart() {
@@ -16,10 +16,9 @@ class ExplorerController(private val view: ExplorerContract.View) : ExplorerCont
         view.act(ExplorerView.CheckPermission(perms))
     }
 
-    private fun initFileManager() {
-        val homePath = FileUtils.internalStorage
-        val parent = FileUtils.parentDirectory(homePath)
-        view.act(ExplorerView.NavigateTo(parent))
+    private fun initFileManager(videoPathList: List<String>) {
+        val filesList = FileUtils.getVideoDirectories(videoPathList)
+        view.act(ExplorerView.NavigateTo(filesList))
     }
 
 }

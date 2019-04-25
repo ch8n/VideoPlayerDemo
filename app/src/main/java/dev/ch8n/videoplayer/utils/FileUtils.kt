@@ -1,8 +1,11 @@
 package dev.ch8n.videoplayer.utils
 
+import android.content.Context
 import android.os.Environment
-import dev.ch8n.videoplayer.explorer.model.ExploreItem
+import android.provider.MediaStore
+import dev.ch8n.videoplayer.explorer.model.VideoDir
 import java.io.File
+
 
 object FileUtils {
 
@@ -19,41 +22,67 @@ object FileUtils {
         return@with path
     }
 
-
-    fun getFiles(path: String): ArrayList<ExploreItem> {
-        val exploreItems = arrayListOf<ExploreItem>()
-        val files: Array<File> = File(path).listFiles()
-        files.forEach { file ->
-            when {
-                file.exists()
-                        && !file.isDirectory
-//                        && file.absoluteFile.toString()
-//                    .contains(".mp4|.3gp|.webm|.mkv|.avi")
-                -> {
-                    exploreItems.add(
-                        ExploreItem(
-                            file.absolutePath,
-                            file.name,
-                            false, 0
-                        )
-                    )
-                }
-                file.exists() && file.isDirectory -> {
-                    exploreItems.add(
-                        ExploreItem(
-                            file.absolutePath.toString()
-                                .trimEnd('/'),
-                            file.name,
-                            true,
-                            file.listFiles().size
-                        )
-                    )
-                }
-
+    fun getAllVideoPath(context: Context): ArrayList<String> {
+        val uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI
+        val projection = arrayOf(MediaStore.Video.VideoColumns.DATA)
+        val cursor = context.contentResolver.query(uri, projection, null, null, null)
+        val pathArrList = arrayListOf<String>()
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                pathArrList.add(cursor.getString(0))
             }
+            cursor.close()
+        }
+        return pathArrList
+    }
 
+    fun getVideoDirectories(videoPathList: List<String>): ArrayList<VideoDir> {
+        val exploreItem = arrayListOf<VideoDir>()
+        videoPathList.forEach {
+            val path = it.split(Regex("((?:/[^/\\r\\n]*))\$")).get(0)
+            val name = it.split(Regex("((?:/[^/\\r\\n]*))\$")).get(1)
+            exploreItem.add(
+                VideoDir(
+                    path = path,
+                    name = name,
+                    isDirectory = true
+                )
+            )
         }
 
-        return exploreItems
+        return exploreItem
     }
+
+    fun removeDuplicates(list: ArrayList<VideoDir>): ArrayList<VideoDir> {
+
+        val set = LinkedHashSet<String>()
+        list.forEach { set.add(it.path) }
+        list.clear()
+        set.forEach {
+            list.add(
+                VideoDir(
+                    path = it,
+                    name = it.split(Regex("((?:/[^/\\r\\n]*))\$")).get(1).trim('/'),
+                    isDirectory = true
+                )
+            )
+        }
+        return list
+    }
+
+    fun getVideoFiles(videoDIR: VideoDir): List<VideoDir> {
+        val videoItems = arrayListOf<VideoDir>()
+        val videoDir = File(videoDIR.path)
+        videoDir.listFiles().filter { !it.isDirectory }.forEach {
+            videoItems.add(
+                VideoDir(
+                    path = it.absolutePath.toString(),
+                    name = it.name,
+                    isDirectory = false
+                )
+            )
+        }
+        return videoItems
+    }
+
 }

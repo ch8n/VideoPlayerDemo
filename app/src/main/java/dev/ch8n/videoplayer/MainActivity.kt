@@ -15,12 +15,16 @@ import pub.devrel.easypermissions.EasyPermissions
 
 class MainActivity : AppCompatActivity() {
 
+
+    private var video_path: String = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        attachActions()
+        video_path = intent?.extras?.getString("video_path") ?: ""
+        updatePlayerUrl(video_path)
 
+        attachActions()
         populateOnlinelist()
     }
 

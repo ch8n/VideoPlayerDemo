@@ -5,13 +5,15 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import dev.ch8n.videoplayer.R
 import dev.ch8n.videoplayer.explorer.fragment.ExplorerFragment
+import dev.ch8n.videoplayer.explorer.model.VideoDir
+import dev.ch8n.videoplayer.utils.FileUtils
 import pub.devrel.easypermissions.EasyPermissions
 
 class ExplorerActivity : AppCompatActivity(), ExplorerContract.View, ExplorerFragment.OnExplorerFragmentInteraction {
 
     override fun act(action: ExplorerView) = when (action) {
         is ExplorerView.CheckPermission -> checkPermission(action.perms)
-        is ExplorerView.NavigateTo -> navigateTo(action.parent)
+        is ExplorerView.NavigateTo -> navigateTo(action.videoDirs)
     }
 
     override fun onFragmentInteraction(action: Uri) {
@@ -35,7 +37,7 @@ class ExplorerActivity : AppCompatActivity(), ExplorerContract.View, ExplorerFra
 
     private fun checkPermission(perms: Array<String>) {
         if (EasyPermissions.hasPermissions(this, *perms)) {
-            controller.event(ExplorerAgent.InitFileManager)
+            controller.event(ExplorerAgent.InitFileManager(FileUtils.getAllVideoPath(this)))
         } else {
             EasyPermissions.requestPermissions(
                 this,
@@ -51,7 +53,7 @@ class ExplorerActivity : AppCompatActivity(), ExplorerContract.View, ExplorerFra
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
     }
 
-    private fun navigateTo(path: String) = navigator.explorerNavigateTo(path)
+    private fun navigateTo(videoDir: ArrayList<VideoDir>) = navigator.explorerNavigateTo(videoDir)
 
     override fun onBackPressed() = navigator.onBackPressed()
 
