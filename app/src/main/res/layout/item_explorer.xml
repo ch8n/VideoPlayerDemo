@@ -5,34 +5,30 @@
         android:id="@+id/container_explored_item"
         android:orientation="vertical"
         android:padding="16dp"
+        android:gravity="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
+    <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/image_thumb"
+            tools:text="Name"
+            android:textSize="18sp"
+            android:layout_width="64dp"
+            android:layout_height="64dp"/>
 
     <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/text_name"
             tools:text="Name"
-            android:textSize="18sp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
-    <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/text_path"
-            tools:text="Path"
-            android:textSize="12sp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
-    <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/text_type"
-            tools:text="type"
             android:textSize="14sp"
+            android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
     <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/text_children"
             tools:text="items"
-            android:textSize="14sp"
+            android:gravity="center"
+            android:textSize="10sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 

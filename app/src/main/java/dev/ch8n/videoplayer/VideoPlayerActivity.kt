@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import pub.devrel.easypermissions.EasyPermissions
 
 
-class MainActivity : AppCompatActivity() {
+class VideoPlayerActivity : AppCompatActivity() {
 
 
     private var video_path: String = ""
@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity() {
             val list = getAllVideoPath(this)
             list_offline.run {
                 adapter = ArrayAdapter<String>(
-                    this@MainActivity,
+                    this@VideoPlayerActivity,
                     android.R.layout.simple_expandable_list_item_1,
                     list
                 )
@@ -78,7 +78,7 @@ class MainActivity : AppCompatActivity() {
     private fun populateOnlinelist() {
         list_online.run {
             adapter = ArrayAdapter<String>(
-                this@MainActivity,
+                this@VideoPlayerActivity,
                 android.R.layout.simple_expandable_list_item_1,
                 AppConst.PUBLIC_VIDEO_URL
             )

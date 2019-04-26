@@ -73,7 +73,12 @@ object FileUtils {
     fun getVideoFiles(videoDIR: VideoDir): List<VideoDir> {
         val videoItems = arrayListOf<VideoDir>()
         val videoDir = File(videoDIR.path)
-        videoDir.listFiles().filter { !it.isDirectory }.forEach {
+        videoDir.listFiles().filter {
+            !it.isDirectory &&
+                    it.absolutePath.toString()
+                        .contains(Regex("(.mp4|.3gp|.webm|.mkv|.avi)\$"))
+        }
+            .forEach {
             videoItems.add(
                 VideoDir(
                     path = it.absolutePath.toString(),
@@ -85,4 +90,16 @@ object FileUtils {
         return videoItems
     }
 
+
+    fun getVideoCount(videoDir: VideoDir): Int {
+        val file: File = File(videoDir.path)
+        val videoList = file.listFiles().filter {
+            !it.isDirectory && it.absolutePath.toString().contains(Regex("(.mp4|.3gp|.webm|.mkv|.avi)\$"))
+        }
+        return videoList.size
+    }
+
+    fun getFileName(path: String): String {
+        return File(path).name
+    }
 }

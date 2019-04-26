@@ -1,25 +1,22 @@
 package dev.ch8n.videoplayer.explorer.fragment
 
 import android.content.Context
-import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
-import dev.ch8n.videoplayer.MainActivity
+import androidx.recyclerview.widget.GridLayoutManager
 import dev.ch8n.videoplayer.R
 import dev.ch8n.videoplayer.explorer.fragment.adapter.ExploreItemActionListener
 import dev.ch8n.videoplayer.explorer.fragment.adapter.ExploreItemAdapter
 import dev.ch8n.videoplayer.explorer.model.VideoDir
-import dev.ch8n.videoplayer.utils.FileUtils
 import kotlinx.android.synthetic.main.fragment_explorer.*
 
-class ExplorerFragment : Fragment() {
+class DirectoryFragment : Fragment(), DirectoryContract.View {
+
 
     private var listener: OnExplorerFragmentInteraction? = null
     private lateinit var attachedContext: Context
@@ -29,12 +26,10 @@ class ExplorerFragment : Fragment() {
         if (context is OnExplorerFragmentInteraction) {
             listener = context
         } else {
-            throw RuntimeException("$context must implement OnFragmentInteractionListener")
+            throw RuntimeException("$context must implement OnExplorerFragmentInteraction")
         }
         attachedContext = requireContext()
     }
-
-    private var currentPath: ArrayList<VideoDir> = arrayListOf()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -47,24 +42,25 @@ class ExplorerFragment : Fragment() {
     }
 
     lateinit var exploreItemAdapter: ExploreItemAdapter
+    lateinit var navigator: DirectoryNavigator
+    lateinit var controller: DirectoryController
     private fun setup() {
+        navigator = DirectoryNavigator(this)
+        controller = DirectoryController(this)
+        controller.onStart()
+    }
+
+    override fun attachActions() {
         list_explored_items.run {
-            layoutManager = LinearLayoutManager(attachedContext)
+            layoutManager = GridLayoutManager(attachedContext, 3)
             adapter = ExploreItemAdapter.newInstance(
                 object : ExploreItemActionListener {
                     override fun onClickPosition(position: Int) {
                         val item = exploreItemAdapter.getExploreItemAt(position)
-                        Toast.makeText(attachedContext, item.toString(), Toast.LENGTH_LONG).show()
-
                         if (item.isDirectory) {
-                            val videoItems = FileUtils.getVideoFiles(item)
-                            exploreItemAdapter.submitList(videoItems)
+                            controller.showAllVideofiles(item)
                         } else {
-                            startActivity(Intent(
-                                attachedContext, MainActivity::class.java
-                            ).also {
-                                it.putExtra("video_path", item.path)
-                            })
+                            navigator.openVideoPlayer(item)
                         }
                     }
                 }
@@ -79,25 +75,29 @@ class ExplorerFragment : Fragment() {
         listener = null
     }
 
-    interface OnExplorerFragmentInteraction {
-        fun onFragmentInteraction(uri: Uri)
+    override fun showDirList(list: List<VideoDir>, columnCount: Int) {
+        Log.e("EXPLORE_FRAG", list.toString())
+        //list_explored_items.layoutManager = GridLayoutManager(attachedContext, columnCount)
+        exploreItemAdapter.submitList(list)
     }
-
 
     fun openPath(displayItems: ArrayList<VideoDir>) {
         if (!isAdded) {
             return
         }
-        val newDisplayItems = FileUtils.removeDuplicates(displayItems)
-        currentPath = newDisplayItems
-        Log.e("EXPLORE_FRAG", newDisplayItems.toString())
-        exploreItemAdapter.submitList(newDisplayItems)
+        controller.distincList(displayItems)
     }
 
-    fun navigateUp(): Boolean {
-
-        return true
+    fun navigateUp(): Boolean = navigator.canNavigateUp(
+        exploreItemAdapter.getExploreItemAt(0)
+    ).also { canNavigateup ->
+        if (canNavigateup) {
+            controller.showAllVideoDirectories()
+        }
     }
 
+    interface OnExplorerFragmentInteraction {
+        fun onFragmentInteraction(uri: Uri)
+    }
 
 }

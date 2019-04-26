@@ -4,12 +4,12 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import dev.ch8n.videoplayer.R
-import dev.ch8n.videoplayer.explorer.fragment.ExplorerFragment
+import dev.ch8n.videoplayer.explorer.fragment.DirectoryFragment
 import dev.ch8n.videoplayer.explorer.model.VideoDir
 import dev.ch8n.videoplayer.utils.FileUtils
 import pub.devrel.easypermissions.EasyPermissions
 
-class ExplorerActivity : AppCompatActivity(), ExplorerContract.View, ExplorerFragment.OnExplorerFragmentInteraction {
+class ExplorerActivity : AppCompatActivity(), ExplorerContract.View, DirectoryFragment.OnExplorerFragmentInteraction {
 
     override fun act(action: ExplorerView) = when (action) {
         is ExplorerView.CheckPermission -> checkPermission(action.perms)
