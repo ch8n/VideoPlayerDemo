@@ -10,6 +10,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 class VideoPlayerActivity : AppCompatActivity() {
 
 
+
     private var video_path: String = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,13 +29,14 @@ class VideoPlayerActivity : AppCompatActivity() {
             videoName,
             Jzvd.SCREEN_WINDOW_NORMAL
         )
+
+        videoplayer.startWindowFullscreen()
+
     }
 
     override fun onBackPressed() {
-        if (Jzvd.backPress()) {
-            return
-        }
-        super.onBackPressed()
+        finish()
+        Jzvd.releaseAllVideos()
     }
 
     override fun onPause() {
