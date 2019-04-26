@@ -1,7 +1,7 @@
 package dev.ch8n.videoplayer.explorer.fragment
 
 import android.content.Intent
-import dev.ch8n.videoplayer.VideoPlayerActivity
+import dev.ch8n.videoplayer.videoplayer.VideoPlayerActivity
 import dev.ch8n.videoplayer.explorer.model.VideoDir
 
 class DirectoryNavigator(
