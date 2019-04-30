@@ -24,7 +24,7 @@
             </intent-filter>
         </activity>
         <activity
-                android:screenOrientation="landscape"
+                android:screenOrientation="sensor"
                 android:configChanges="orientation|screenSize|keyboardHidden"
                 android:theme="@style/Theme.AppCompat.NoActionBar"
                 android:name=".videoplayer.VideoPlayerActivity"/>

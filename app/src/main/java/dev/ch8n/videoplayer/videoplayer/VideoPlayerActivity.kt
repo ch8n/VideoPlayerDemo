@@ -1,6 +1,8 @@
 package dev.ch8n.videoplayer.videoplayer
 
+import android.media.MediaMetadataRetriever
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import cn.jzvd.Jzvd
 import dev.ch8n.videoplayer.utils.FileUtils
@@ -24,13 +26,24 @@ class VideoPlayerActivity : AppCompatActivity() {
 
         val videoName = FileUtils.getFileName(path)
 
+
         videoplayer.setUp(
             path,
             videoName,
             Jzvd.SCREEN_WINDOW_NORMAL
         )
 
-        videoplayer.startWindowFullscreen()
+        videoplayer.startButton.callOnClick()
+
+        val videoMeta = MediaMetadataRetriever().also { it.setDataSource(path) }
+        val videoRotation = videoMeta.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION)
+
+        when (videoRotation) {
+            //0, 90, 180, or 270
+            "0", "270" -> videoplayer.startWindowFullscreen()
+        }
+
+        Log.e("videoPlayer", videoRotation)
 
     }
 
