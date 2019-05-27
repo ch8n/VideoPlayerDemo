@@ -1,6 +1,6 @@
-package dev.ch8n.videoplayer.explorer
+package dev.ch8n.videoplayer.ui.explorer
 
-import dev.ch8n.videoplayer.explorer.model.VideoDir
+import dev.ch8n.videoplayer.ui.explorer.model.VideoDir
 
 interface ExplorerContract {
 

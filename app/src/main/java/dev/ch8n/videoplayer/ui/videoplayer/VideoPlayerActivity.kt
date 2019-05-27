@@ -1,4 +1,4 @@
-package dev.ch8n.videoplayer.videoplayer
+package dev.ch8n.videoplayer.ui.videoplayer
 
 import android.media.MediaMetadataRetriever
 import android.os.Bundle

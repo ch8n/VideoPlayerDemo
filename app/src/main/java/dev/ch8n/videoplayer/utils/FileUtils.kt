@@ -3,7 +3,7 @@ package dev.ch8n.videoplayer.utils
 import android.content.Context
 import android.os.Environment
 import android.provider.MediaStore
-import dev.ch8n.videoplayer.explorer.model.VideoDir
+import dev.ch8n.videoplayer.ui.explorer.model.VideoDir
 import java.io.File
 
 

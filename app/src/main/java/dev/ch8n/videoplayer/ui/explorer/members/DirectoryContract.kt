@@ -1,6 +1,6 @@
-package dev.ch8n.videoplayer.explorer.fragment
+package dev.ch8n.videoplayer.ui.explorer.members
 
-import dev.ch8n.videoplayer.explorer.model.VideoDir
+import dev.ch8n.videoplayer.ui.explorer.model.VideoDir
 
 interface DirectoryContract {
     interface View {

@@ -15,7 +15,7 @@
             android:theme="@style/AppTheme">
 
         <activity
-                android:name=".explorer.ExplorerActivity"
+                android:name=".ui.explorer.ExplorerActivity"
                 android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -27,7 +27,7 @@
                 android:screenOrientation="sensor"
                 android:configChanges="orientation|screenSize|keyboardHidden"
                 android:theme="@style/Theme.AppCompat.NoActionBar"
-                android:name=".videoplayer.VideoPlayerActivity"/>
+                android:name="dev.ch8n.videoplayer.ui.videoplayer.VideoPlayerActivity"/>
     </application>
 
 </manifest>

@@ -1,7 +1,7 @@
-package dev.ch8n.videoplayer.explorer
+package dev.ch8n.videoplayer.ui.explorer
 
-import dev.ch8n.videoplayer.explorer.fragment.DirectoryFragment
-import dev.ch8n.videoplayer.explorer.model.VideoDir
+import dev.ch8n.videoplayer.ui.explorer.members.DirectoryFragment
+import dev.ch8n.videoplayer.ui.explorer.model.VideoDir
 import kotlinx.android.synthetic.main.activity_explorer.*
 
 class ExplorerNavigator(

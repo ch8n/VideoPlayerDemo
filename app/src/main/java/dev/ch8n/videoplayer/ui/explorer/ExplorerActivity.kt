@@ -1,11 +1,11 @@
-package dev.ch8n.videoplayer.explorer
+package dev.ch8n.videoplayer.ui.explorer
 
 import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import dev.ch8n.videoplayer.R
-import dev.ch8n.videoplayer.explorer.fragment.DirectoryFragment
-import dev.ch8n.videoplayer.explorer.model.VideoDir
+import dev.ch8n.videoplayer.ui.explorer.members.DirectoryFragment
+import dev.ch8n.videoplayer.ui.explorer.model.VideoDir
 import dev.ch8n.videoplayer.utils.FileUtils
 import pub.devrel.easypermissions.EasyPermissions
 

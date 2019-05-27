@@ -1,9 +1,10 @@
-package dev.ch8n.videoplayer.explorer
+package dev.ch8n.videoplayer.ui.explorer
 
 import dev.ch8n.videoplayer.utils.AppConst
 import dev.ch8n.videoplayer.utils.FileUtils
 
-class ExplorerController(private val view: ExplorerContract.View) : ExplorerContract.Controller {
+class ExplorerController(private val view: ExplorerContract.View) :
+    ExplorerContract.Controller {
 
     override fun event(event: ExplorerAgent) = when (event) {
         ExplorerAgent.OnStart -> onStart()

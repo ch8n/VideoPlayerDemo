@@ -1,4 +1,4 @@
-package dev.ch8n.videoplayer.explorer.model
+package dev.ch8n.videoplayer.ui.explorer.model
 
 data class VideoDir(
     var path: String,

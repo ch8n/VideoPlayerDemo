@@ -1,4 +1,4 @@
-package dev.ch8n.videoplayer.explorer.fragment
+package dev.ch8n.videoplayer.ui.explorer.members
 
 import android.content.Context
 import android.net.Uri
@@ -8,11 +8,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import dev.ch8n.videoplayer.R
-import dev.ch8n.videoplayer.explorer.fragment.adapter.ExploreItemActionListener
-import dev.ch8n.videoplayer.explorer.fragment.adapter.ExploreItemAdapter
-import dev.ch8n.videoplayer.explorer.model.VideoDir
+import dev.ch8n.videoplayer.ui.explorer.members.adapter.ExploreItemAdapter
+import dev.ch8n.videoplayer.ui.explorer.members.adapter.ExploredItemEvents
+import dev.ch8n.videoplayer.ui.explorer.model.VideoDir
 import kotlinx.android.synthetic.main.fragment_explorer.*
 
 class DirectoryFragment : Fragment(), DirectoryContract.View {
@@ -51,23 +52,34 @@ class DirectoryFragment : Fragment(), DirectoryContract.View {
     }
 
     override fun attachActions() {
+
         list_explored_items.run {
             layoutManager = GridLayoutManager(attachedContext, 3)
-            adapter = ExploreItemAdapter.newInstance(
-                object : ExploreItemActionListener {
-                    override fun onClickPosition(position: Int) {
-                        val item = exploreItemAdapter.getExploreItemAt(position)
-                        if (item.isDirectory) {
-                            controller.showAllVideofiles(item)
-                        } else {
-                            navigator.openVideoPlayer(item)
-                        }
+            adapter = ExploreItemAdapter.newInstance().apply {
+                exploreItemAdapter = this
+                onEvent().observe(this@DirectoryFragment, Observer { listEvent ->
+                    when (listEvent) {
+                        is ExploredItemEvents.OnExploreItemClicked -> onListItemClicked(listEvent.position)
                     }
-                }
-            ).also {
-                exploreItemAdapter = it
+                })
             }
         }
+
+    }
+
+    private fun onListItemClicked(position: Int) {
+        val item = exploreItemAdapter.getExploreItemAt(position)
+        if (item.isDirectory) {
+            controller.showAllVideofiles(item)
+        } else {
+            navigator.openVideoPlayer(item)
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        // release for context holder classes
+        list_explored_items.adapter = null
     }
 
     override fun onDetach() {
